@@ -1,6 +1,9 @@
+'use client'; // usePathnameを使用するために必要
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
+	const pathName = usePathname(); // 現在のURLパスを取得
 	const navList = [
 		{
 			url: '/',
@@ -25,7 +28,11 @@ export default function Header() {
 						<li key={nav.title}>
 							<Link
 								href={nav.url}
-								className="relative inline-block px-4 pb-2 hover:after:content-[''] hover:after:absolute hover:after:left-1/2 hover:after:translate-x-[-50%] hover:after:bottom-0 hover:after:h-[4px] hover:after:w-full hover:after:bg-yellow-400"
+								className={`relative inline-block px-4 pb-2 transition-colors duration-200 ${
+									pathName === nav.url
+										? "after:content-[''] after:absolute after:left-1/2 after:translate-x-[-50%] after:bottom-0 after:h-[4px] after:w-full after:bg-yellow-400"
+										: ' hover:after:content-[""] hover:after:absolute hover:after:left-1/2 hover:after:translate-x-[-50%] hover:after:bottom-0 hover:after:h-[4px] hover:after:w-full hover:after:bg-yellow-400'
+								}`}
 							>
 								{nav.title}
 							</Link>
