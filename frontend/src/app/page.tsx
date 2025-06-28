@@ -1,7 +1,7 @@
 export default function Home() {
 	return (
-		<>
-			<h1>トップページです</h1>
-		</>
+		<main className='p-6'>
+			<h1 className='text-xl font-bold mb-4'>トップページ</h1>
+		</main>
 	);
 }
