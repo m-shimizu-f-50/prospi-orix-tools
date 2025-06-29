@@ -50,9 +50,14 @@ export default function PlayerForm() {
 			: [];
 
 	// フォームの入力値を更新するハンドラー
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		console.log('送信内容:', form);
+		await fetch('http://localhost:8000/api/players', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(form),
+		});
 	};
 
 	// 入力値の変更を処理するハンドラー
