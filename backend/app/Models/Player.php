@@ -12,6 +12,7 @@ class Player extends Model
     protected $fillable = [
         'name',
         'position',
+        'series',
         'type',
         'spirit',
         'limit_break',

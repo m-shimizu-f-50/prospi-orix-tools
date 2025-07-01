@@ -11,31 +11,33 @@ export default function PlayerForm() {
 	type PlayerFormType = {
 		name: string;
 		position: string;
-		spirit: string;
+		series: string;
+		spirit: number;
 		limit_break: string;
 		type: 'batter' | 'pitcher' | null;
 		trajectory: string;
-		meet: string;
-		power: string;
-		speed: string;
-		velocity: string;
-		control: string;
-		stamina: string;
+		meet: number;
+		power: number;
+		speed: number;
+		velocity: number;
+		control: number;
+		stamina: number;
 	};
 
 	const initialForm: PlayerFormType = {
 		name: '',
 		position: '',
-		spirit: '',
+		series: '',
+		spirit: 4000,
 		limit_break: '',
 		type: null,
 		trajectory: '',
-		meet: '',
-		power: '',
-		speed: '',
-		velocity: '',
-		control: '',
-		stamina: '',
+		meet: 50,
+		power: 50,
+		speed: 50,
+		velocity: 50,
+		control: 50,
+		stamina: 50,
 	};
 
 	// フォームの状態を管理
@@ -83,12 +85,12 @@ export default function PlayerForm() {
 			type: type,
 			position: '', // ポジションをリセット
 			trajectory: '', // 弾道をリセット
-			meet: '', // ミートをリセット
-			power: '', // パワーをリセット
-			speed: '', // 走力をリセット
-			velocity: '', // 球威をリセット
-			control: '', // 制球をリセット
-			stamina: '', // スタミナをリセット
+			meet: 50, // ミートをリセット
+			power: 50, // パワーをリセット
+			speed: 50, // 走力をリセット
+			velocity: 50, // 球威をリセット
+			control: 50, // 制球をリセット
+			stamina: 50, // スタミナをリセット
 		}));
 	};
 
@@ -117,6 +119,21 @@ export default function PlayerForm() {
 					type='number'
 					name='spirit'
 					value={form.spirit}
+					onChange={handleChange}
+					className='w-full border p-2 rounded'
+					required
+					min={2800}
+					step={100} // スピリッツは100単位で入力
+					onKeyDown={(e) => e.preventDefault()} // 数値入力時のキーボード操作を無効化
+				/>
+			</div>
+			{/* シリーズ */}
+			<div>
+				<label className='block font-medium'>シリーズ</label>
+				<input
+					type='text'
+					name='series'
+					value={form.series}
 					onChange={handleChange}
 					className='w-full border p-2 rounded'
 					required
@@ -207,6 +224,8 @@ export default function PlayerForm() {
 							type='number'
 							name='meet'
 							value={form.meet}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
@@ -217,6 +236,8 @@ export default function PlayerForm() {
 							type='number'
 							name='power'
 							value={form.power}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
@@ -227,6 +248,8 @@ export default function PlayerForm() {
 							type='number'
 							name='speed'
 							value={form.speed}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
@@ -243,6 +266,8 @@ export default function PlayerForm() {
 							type='number'
 							name='velocity'
 							value={form.velocity}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
@@ -253,6 +278,8 @@ export default function PlayerForm() {
 							type='number'
 							name='control'
 							value={form.control}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
@@ -263,6 +290,8 @@ export default function PlayerForm() {
 							type='number'
 							name='stamina'
 							value={form.stamina}
+							min={0}
+							max={99}
 							onChange={handleChange}
 							className='w-full border p-2 rounded'
 						/>
