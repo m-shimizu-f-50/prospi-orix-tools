@@ -38,6 +38,7 @@ class PlayerController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'position' => 'required|string',
+            'series' => 'nullable|string',
             'type' => 'required|in:batter,pitcher',
             'spirit' => 'required|integer',
             'limit_break' => 'required|integer',
