@@ -30,7 +30,7 @@ export const TRAJECTORIES = [
 	{ value: '7', label: 'ラインドライブ' },
 ];
 
-// スキル定義
+// 超特能定義（投手）
 export const PITCHER_SUPER_SKILLS = [
 	{ value: '1', label: '超ノビ' },
 	{ value: '2', label: '超キレ' },
@@ -51,10 +51,28 @@ export const PITCHER_SUPER_SKILLS = [
 ];
 
 export const PITCHER_SKILLS = [
-	'広角打法',
-	'アーチスト',
-	'対ピンチ',
-	'選球眼',
-	'固め打ち',
-	// など...
+	{ value: '1', label: 'ノビ' },
+	{ value: '2', label: 'キレ' },
+	{ value: '3', label: '援護' },
+	{ value: '4', label: '奪三振' },
+	{ value: '5', label: 'コントロール' },
+	{ value: '6', label: '対ピンチ' },
+	{ value: '7', label: '豪速球' },
+	{ value: '8', label: '重い球' },
+	{ value: '9', label: '存在感' },
+	{ value: '10', label: '打たれ強さ' },
+	{ value: '10', label: '対左打者' },
+	{ value: '11', label: '対右打者' },
+	{ value: '12', label: '安定感' },
+	{ value: '13', label: '緩急' },
+	{ value: '14', label: 'グランドボーラー' },
+	{ value: '15', label: '奥行き' },
+	{ value: '16', label: '対ランナー' },
+	{ value: '17', label: '球持ち' },
+	{ value: '18', label: '尻上がり' },
+	{ value: '19', label: '対強打者' },
+	{ value: '20', label: '闘志' },
+	{ value: '21', label: '荒れ球' },
+	{ value: '22', label: '白熱' },
+	{ value: '23', label: 'クイック' },
 ];
