@@ -7,6 +7,8 @@ import {
 } from '@/app/constants/common';
 import { useState } from 'react';
 
+import React from 'react';
+
 export default function PlayerForm() {
 	type PlayerFormType = {
 		name: string;
