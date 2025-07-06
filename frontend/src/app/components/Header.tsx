@@ -1,9 +1,16 @@
 'use client'; // usePathnameを使用するために必要
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
 
 export default function Header() {
-	const pathName = usePathname(); // 現在のURLパスを取得
+	const router = useRouter();
+	const pathName = usePathname();
+	const [value, setValue] = useState(0);
+
 	const navList = [
 		{
 			url: '/',
@@ -15,31 +22,62 @@ export default function Header() {
 		},
 	];
 
+	// 現在のパスに基づいてタブの値を設定
+	useEffect(() => {
+		const currentIndex = navList.findIndex((nav) => nav.url === pathName);
+		setValue(currentIndex >= 0 ? currentIndex : 0);
+	}, [pathName]);
+
+	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+		setValue(newValue);
+		router.push(navList[newValue].url);
+	};
+
 	return (
 		<header className='border-b shadow-sm'>
 			{/* タイトル */}
 			<div className='px-2 py-5'>
-				<h1 className='text-lg font-semibold'>プロスピA | オリックス純正</h1>
+				<Typography
+					variant='h6'
+					component='h1'
+					className='text-lg font-semibold'
+				>
+					プロスピA | オリックス純正
+				</Typography>
 			</div>
 			{/* 下部：メインメニュー */}
-			<nav className='bg-white border-t border-gray-200'>
-				<ul className='flex px-4 pt-2 space-x-4 font-semibold text-sm overflow-x-auto'>
+			<Box
+				sx={{
+					borderTop: 1,
+					borderColor: 'divider',
+					bgcolor: 'background.paper',
+				}}
+			>
+				<Tabs
+					value={value}
+					onChange={handleChange}
+					variant='scrollable'
+					scrollButtons='auto'
+					sx={{
+						'& .MuiTab-root': {
+							fontWeight: 600,
+							fontSize: '0.875rem',
+							textTransform: 'none',
+							minHeight: '48px',
+							padding: '12px 16px',
+							color: '#4b5563', // gray-700
+						},
+						'& .MuiTabs-indicator': {
+							backgroundColor: '#fbbf24', // yellow-400
+							height: '4px',
+						},
+					}}
+				>
 					{navList.map((nav) => (
-						<li key={nav.title}>
-							<Link
-								href={nav.url}
-								className={`relative inline-block px-4 pb-2 transition-colors duration-200 ${
-									pathName === nav.url
-										? "after:content-[''] after:absolute after:left-1/2 after:translate-x-[-50%] after:bottom-0 after:h-[4px] after:w-full after:bg-yellow-400"
-										: ' hover:after:content-[""] hover:after:absolute hover:after:left-1/2 hover:after:translate-x-[-50%] hover:after:bottom-0 hover:after:h-[4px] hover:after:w-full hover:after:bg-yellow-400'
-								}`}
-							>
-								{nav.title}
-							</Link>
-						</li>
+						<Tab key={nav.title} label={nav.title} />
 					))}
-				</ul>
-			</nav>
+				</Tabs>
+			</Box>
 		</header>
 	);
 }
