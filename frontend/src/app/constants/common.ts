@@ -86,4 +86,10 @@ export const PITCHER_SKILLS = [
 	{ value: '32', label: '内角◯' },
 	{ value: '33', label: '外角◯' },
 	{ value: '34', label: '熱気' },
+	{ value: '35', label: '楽天キラー' },
+	{ value: '36', label: '巨人キラー' },
+	{ value: '37', label: 'エースの風格' },
+	{ value: '38', label: '兆し' },
+	{ value: '39', label: '安全圏' },
+	{ value: '40', label: '阪神キラー' },
 ];
