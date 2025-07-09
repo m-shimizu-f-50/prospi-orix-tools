@@ -93,3 +93,23 @@ export const PITCHER_SKILLS = [
 	{ value: '39', label: '安全圏' },
 	{ value: '40', label: '阪神キラー' },
 ];
+
+// 超特能定義（野手）
+export const BATTER_SUPER_SKILLS = [
+	{ value: '1', label: '超アーチスト' },
+	{ value: '2', label: '超広角打法' },
+	{ value: '3', label: '超アベレージヒッター' },
+	{ value: '4', label: '超チャンスメーカー' },
+	{ value: '5', label: '超チャンス' },
+	{ value: '6', label: '超' },
+	{ value: '7', label: '超豪速球' },
+	{ value: '8', label: '超重い球' },
+	{ value: '9', label: '超存在感' },
+	{ value: '10', label: '超打たれ強さ' },
+	{ value: '10', label: '超対左打者' },
+	{ value: '11', label: '超対右打者' },
+	{ value: '12', label: '超奪三振ショー' },
+	{ value: '13', label: '超緩急' },
+	{ value: '14', label: '超グランドボーラー' },
+	{ value: '15', label: '超奥行き' },
+];
