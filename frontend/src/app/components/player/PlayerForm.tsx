@@ -6,8 +6,20 @@ import {
 	TRAJECTORIES,
 } from '@/app/constants/common';
 import { useState } from 'react';
-
-import React from 'react';
+import {
+	TextField,
+	FormControl,
+	FormLabel,
+	RadioGroup,
+	FormControlLabel,
+	Radio,
+	Select,
+	MenuItem,
+	Button,
+	Typography,
+	Paper,
+	Stack,
+} from '@mui/material';
 
 export default function PlayerForm() {
 	type PlayerFormType = {
@@ -64,14 +76,28 @@ export default function PlayerForm() {
 		});
 	};
 
-	// 入力値の変更を処理するハンドラー
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	// 入力値の変更を処理するハンドラー（TextField用）
+	const handleTextFieldChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
 
 		if (name === 'type') {
-			resetFormByType(value as 'batter' | 'pitcher'); // ← 種別変更時にフォーム項目をクリア
+			resetFormByType(value as 'batter' | 'pitcher');
+		} else {
+			setForm((prev) => ({
+				...prev,
+				[name]: value,
+			}));
+		}
+	};
+
+	// Select用のハンドラー
+	const handleSelectChange = (e: any) => {
+		const { name, value } = e.target;
+
+		if (name === 'type') {
+			resetFormByType(value as 'batter' | 'pitcher');
 		} else {
 			setForm((prev) => ({
 				...prev,
@@ -97,215 +123,232 @@ export default function PlayerForm() {
 	};
 
 	return (
-		<form
+		<Paper
+			component='form'
 			onSubmit={handleSubmit}
-			className='max-w-3xl mx-auto space-y-4 bg-white p-6 rounded-lg shadow'
+			sx={{
+				maxWidth: 'lg',
+				mx: 'auto',
+				p: 3,
+				bgcolor: 'background.paper',
+			}}
 		>
-			<h2 className='text-xl font-bold'>選手登録フォーム</h2>
-			{/* 選手名・ポジションなど共通項目 */}
-			<div>
-				<label className='block font-medium'>選手名</label>
-				<input
-					type='text'
+			<Stack spacing={3}>
+				<Typography variant='h5' component='h2' fontWeight='bold'>
+					選手登録フォーム
+				</Typography>
+
+				{/* 選手名 */}
+				<TextField
+					label='選手名'
 					name='name'
 					value={form.name}
-					onChange={handleChange}
-					className='w-full border p-2 rounded'
+					onChange={handleTextFieldChange}
+					fullWidth
 					required
+					inputProps={{
+						maxLength: 50,
+					}}
 				/>
-			</div>
-			{/* スピリッツ */}
-			<div>
-				<label className='block font-medium'>スピリッツ</label>
-				<input
-					type='number'
+
+				{/* スピリッツ */}
+				<TextField
+					label='スピリッツ'
 					name='spirit'
+					type='number'
 					value={form.spirit}
-					onChange={handleChange}
-					className='w-full border p-2 rounded'
+					onChange={handleTextFieldChange}
+					fullWidth
 					required
-					min={2800}
-					step={100} // スピリッツは100単位で入力
-					onKeyDown={(e) => e.preventDefault()} // 数値入力時のキーボード操作を無効化
+					inputProps={{
+						min: 2800,
+						step: 100,
+					}}
+					helperText='スピリッツは2800以上で100単位で入力してください'
 				/>
-			</div>
-			{/* シリーズ */}
-			<div>
-				<label className='block font-medium'>シリーズ</label>
-				<input
-					type='text'
+
+				{/* シリーズ */}
+				<TextField
+					label='シリーズ'
 					name='series'
 					value={form.series}
-					onChange={handleChange}
-					className='w-full border p-2 rounded'
+					onChange={handleTextFieldChange}
+					fullWidth
 					required
 				/>
-			</div>
-			{/* 凸状況 */}
-			<div>
-				<label className='block font-medium'>限界突破（凸）</label>
-				<input
-					type='number'
+
+				{/* 限界突破（凸） */}
+				<TextField
+					label='限界突破（凸）'
 					name='limit_break'
+					type='number'
 					value={form.limit_break}
-					onChange={handleChange}
-					min={0}
-					max={5}
-					className='w-full border p-2 rounded'
+					onChange={handleTextFieldChange}
+					fullWidth
 					required
+					inputProps={{
+						min: 0,
+						max: 5,
+					}}
 				/>
-			</div>
 
-			{/* 種別選択（初期値はなし） */}
-			<div>
-				<label className='block font-medium'>種別</label>
-				<div className='flex gap-4 mt-1'>
-					<label>
-						<input
-							type='radio'
-							name='type'
-							value='batter'
-							checked={form.type === 'batter'}
-							onChange={handleChange}
-						/>{' '}
-						野手
-					</label>
-					<label>
-						<input
-							type='radio'
-							name='type'
+				{/* 種別選択 */}
+				<FormControl>
+					<FormLabel>種別</FormLabel>
+					<RadioGroup
+						name='type'
+						value={form.type || ''}
+						onChange={handleSelectChange}
+						row
+					>
+						<FormControlLabel value='batter' control={<Radio />} label='野手' />
+						<FormControlLabel
 							value='pitcher'
-							checked={form.type === 'pitcher'}
-							onChange={handleChange}
-						/>{' '}
-						投手
-					</label>
-				</div>
-			</div>
-			{/* ポジション */}
-			<div>
-				<label className='block font-medium'>ポジション</label>
-				<select
-					name='position'
-					value={form.position}
-					onChange={handleChange}
-					className='w-full border p-2 rounded'
-					required
-					disabled={!form.type} // 種別が選択されていない場合は無効化
-				>
-					<option value=''>選択してください</option>
-					{positionOptions.map((pos) => (
-						<option key={pos.value} value={pos.value}>
-							{pos.label}
-						</option>
-					))}
-				</select>
-			</div>
-			{/* 条件分岐：野手フォーム */}
-			{form.type === 'batter' && (
-				<>
-					<div>
-						<label className='block font-medium'>弾道</label>
-						<select
-							name='trajectory'
-							value={form.trajectory}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
-						>
-							<option value=''>選択してください</option>
-							{TRAJECTORIES.map((trajectory) => (
-								<option key={trajectory.value} value={trajectory.value}>
-									{trajectory.label}
-								</option>
-							))}
-						</select>
-					</div>
-					<div>
-						<label className='block font-medium'>ミート</label>
-						<input
-							type='number'
-							name='meet'
-							value={form.meet}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
+							control={<Radio />}
+							label='投手'
 						/>
-					</div>
-					<div>
-						<label className='block font-medium'>パワー</label>
-						<input
-							type='number'
-							name='power'
-							value={form.power}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
-						/>
-					</div>
-					<div>
-						<label className='block font-medium'>走力</label>
-						<input
-							type='number'
-							name='speed'
-							value={form.speed}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
-						/>
-					</div>
-				</>
-			)}
+					</RadioGroup>
+				</FormControl>
 
-			{/* 条件分岐：投手フォーム */}
-			{form.type === 'pitcher' && (
-				<>
-					<div>
-						<label className='block font-medium'>球威</label>
-						<input
+				{/* ポジション */}
+				<FormControl fullWidth disabled={!form.type}>
+					<FormLabel>ポジション</FormLabel>
+					<Select
+						name='position'
+						value={form.position}
+						onChange={handleSelectChange}
+						required
+					>
+						<MenuItem value=''>選択してください</MenuItem>
+						{positionOptions.map((pos) => (
+							<MenuItem key={pos.value} value={pos.value}>
+								{pos.label}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+
+				{/* 条件分岐：野手フォーム */}
+				{form.type === 'batter' && (
+					<Stack spacing={3}>
+						{/* 弾道 */}
+						<FormControl fullWidth>
+							<FormLabel>弾道</FormLabel>
+							<Select
+								name='trajectory'
+								value={form.trajectory}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{TRAJECTORIES.map((trajectory) => (
+									<MenuItem key={trajectory.value} value={trajectory.value}>
+										{trajectory.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+
+						{/* ミート */}
+						<TextField
+							label='ミート'
+							name='meet'
 							type='number'
+							value={form.meet}
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
+						/>
+
+						{/* パワー */}
+						<TextField
+							label='パワー'
+							name='power'
+							type='number'
+							value={form.power}
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
+						/>
+
+						{/* 走力 */}
+						<TextField
+							label='走力'
+							name='speed'
+							type='number'
+							value={form.speed}
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
+						/>
+					</Stack>
+				)}
+
+				{/* 条件分岐：投手フォーム */}
+				{form.type === 'pitcher' && (
+					<Stack spacing={3}>
+						{/* 球威 */}
+						<TextField
+							label='球威'
 							name='velocity'
+							type='number'
 							value={form.velocity}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
 						/>
-					</div>
-					<div>
-						<label className='block font-medium'>制球</label>
-						<input
-							type='number'
+
+						{/* 制球 */}
+						<TextField
+							label='制球'
 							name='control'
-							value={form.control}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
-						/>
-					</div>
-					<div>
-						<label className='block font-medium'>スタミナ</label>
-						<input
 							type='number'
-							name='stamina'
-							value={form.stamina}
-							min={0}
-							max={99}
-							onChange={handleChange}
-							className='w-full border p-2 rounded'
+							value={form.control}
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
 						/>
-					</div>
-				</>
-			)}
-			<button
-				type='submit'
-				className='bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700'
-			>
-				登録する
-			</button>
-		</form>
+
+						{/* スタミナ */}
+						<TextField
+							label='スタミナ'
+							name='stamina'
+							type='number'
+							value={form.stamina}
+							onChange={handleTextFieldChange}
+							fullWidth
+							inputProps={{
+								min: 0,
+								max: 99,
+							}}
+						/>
+					</Stack>
+				)}
+
+				<Button
+					type='submit'
+					variant='contained'
+					color='primary'
+					size='large'
+					sx={{ mt: 2 }}
+				>
+					登録する
+				</Button>
+			</Stack>
+		</Paper>
 	);
 }
