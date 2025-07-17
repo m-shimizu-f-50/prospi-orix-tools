@@ -106,7 +106,7 @@ export const BATTER_SUPER_SKILLS = [
 	{ value: '9', label: '超プルヒッター' },
 	{ value: '10', label: '超パワーヒッター' },
 	{ value: '9', label: '超ハイボールヒッター' },
-	{ value: '10', label: '超打たれ強さ' },
+	{ value: '10', label: '超固め打ち' },
 	{ value: '10', label: '超対左打者' },
 	{ value: '11', label: '超対右打者' },
 	{ value: '12', label: '超奪三振ショー' },
