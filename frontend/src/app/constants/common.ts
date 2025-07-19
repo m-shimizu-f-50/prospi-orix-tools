@@ -111,6 +111,6 @@ export const BATTER_SUPER_SKILLS = [
 	{ value: '11', label: '超選球眼' },
 	{ value: '12', label: '超ラインドライブ' },
 	{ value: '13', label: '超流し打ち' },
-	{ value: '14', label: '超グランドボーラー' },
+	{ value: '14', label: '' },
 	{ value: '15', label: '超奥行き' },
 ];
