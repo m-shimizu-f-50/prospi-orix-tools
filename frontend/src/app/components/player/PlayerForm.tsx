@@ -27,12 +27,14 @@ export default function PlayerForm() {
 		position: string;
 		series: string;
 		spirit: number;
-		limit_break: string;
+		limit_break: number;
 		type: 'batter' | 'pitcher' | null;
+		average: number | null;
 		trajectory: string;
 		meet: number;
 		power: number;
 		speed: number;
+		era: number | null;
 		velocity: number;
 		control: number;
 		stamina: number;
@@ -43,12 +45,14 @@ export default function PlayerForm() {
 		position: '',
 		series: '',
 		spirit: 4000,
-		limit_break: '',
+		limit_break: 0,
 		type: null,
+		average: null,
 		trajectory: '',
 		meet: 50,
 		power: 50,
 		speed: 50,
+		era: null,
 		velocity: 50,
 		control: 50,
 		stamina: 50,
