@@ -56,9 +56,14 @@ class PlayerController extends Controller
             'control' => 'nullable|integer',
             'stamina' => 'nullable|integer',
         ]);
-    
-        $player = Player::create($data);
-        return response()->json($player, 201);
+        try {
+            $player = Player::create($data);
+        
+            return response()->json($player, 201);
+        } catch (\Exception $e) {
+            \Log::error('Failed to create player', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            throw $e;
+        }
     }
 
     /**
