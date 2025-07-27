@@ -16,17 +16,11 @@ class PlayerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 選手を作成するAPI
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function create(Request $request)
     {
 
         // 空文字を null に変換（typecast）
