@@ -6,6 +6,7 @@ import {
 	TRAJECTORIES,
 } from '@/app/constants/common';
 import { useState } from 'react';
+import { useToast } from '@/app/contexts/ToastContext';
 import {
 	TextField,
 	FormControl,
@@ -22,6 +23,8 @@ import {
 } from '@mui/material';
 
 export default function PlayerForm() {
+	const { showToast } = useToast();
+
 	type PlayerFormType = {
 		name: string;
 		position: string;
@@ -73,11 +76,23 @@ export default function PlayerForm() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		console.log('送信内容:', form);
-		await fetch('http://localhost:8000/api/players', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(form),
-		});
+
+		try {
+			const response = await fetch('http://localhost:8000/api/players', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(form),
+			});
+
+			if (response.ok) {
+				showToast('選手の登録が完了しました！', 'success');
+				setForm(initialForm); // フォームをリセット
+			} else {
+				showToast('登録に失敗しました。もう一度お試しください。', 'error');
+			}
+		} catch {
+			showToast('エラーが発生しました。もう一度お試しください。', 'error');
+		}
 	};
 
 	// 入力値の変更を処理するハンドラー（TextField用）
@@ -97,6 +112,7 @@ export default function PlayerForm() {
 	};
 
 	// Select用のハンドラー
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const handleSelectChange = (e: any) => {
 		const { name, value } = e.target;
 
