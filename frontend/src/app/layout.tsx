@@ -4,6 +4,7 @@ import './globals.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { ToastProvider } from './contexts/ToastContext';
+import QueryProvider from './providers/QueryProvider';
 
 const geistSans = localFont({
 	src: './fonts/GeistVF.woff',
@@ -31,11 +32,13 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
 			>
-				<ToastProvider>
-					<Header />
-					<main className='flex-1'>{children}</main>
-					<Footer />
-				</ToastProvider>
+				<QueryProvider>
+					<ToastProvider>
+						<Header />
+						<main className='flex-1'>{children}</main>
+						<Footer />
+					</ToastProvider>
+				</QueryProvider>
 			</body>
 		</html>
 	);
