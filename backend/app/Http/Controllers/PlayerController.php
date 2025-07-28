@@ -8,25 +8,21 @@ use Illuminate\Http\Request;
 class PlayerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 選手一覧を取得するAPI
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $players = Player::all();
+        return response()->json($players);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 選手を作成するAPI
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function create(Request $request)
     {
 
         // 空文字を null に変換（typecast）
@@ -42,6 +38,9 @@ class PlayerController extends Controller
             'type' => 'required|in:batter,pitcher',
             'spirit' => 'required|integer',
             'limit_break' => 'required|integer',
+            'skill1' => 'nullable|string',
+            'skill2' => 'nullable|integer',
+            'skill3' => 'nullable|integer',
     
             // batter
             'average' => 'nullable|numeric',

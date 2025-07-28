@@ -21,9 +21,12 @@ import {
 	Paper,
 	Stack,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 export default function PlayerForm() {
 	const { showToast } = useToast();
+	// useRouterを使用してルーティングを行う
+	const router = useRouter();
 
 	type PlayerFormType = {
 		name: string;
@@ -78,7 +81,7 @@ export default function PlayerForm() {
 		console.log('送信内容:', form);
 
 		try {
-			const response = await fetch('http://localhost:8000/api/players', {
+			const response = await fetch('http://localhost:8000/api/player/create', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(form),
@@ -87,6 +90,8 @@ export default function PlayerForm() {
 			if (response.ok) {
 				showToast('選手の登録が完了しました！', 'success');
 				setForm(initialForm); // フォームをリセット
+				// 選手一覧ページに遷移
+				router.push('/players');
 			} else {
 				showToast('登録に失敗しました。もう一度お試しください。', 'error');
 			}
