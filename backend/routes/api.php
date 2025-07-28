@@ -19,5 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// 選手一覧取得
+Route::get('/players', [PlayerController::class, 'index']);
 // 選手作成
 Route::post('/player/create', [PlayerController::class, 'create']);
+

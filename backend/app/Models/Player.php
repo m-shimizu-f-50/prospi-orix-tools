@@ -16,6 +16,9 @@ class Player extends Model
         'type',
         'spirit',
         'limit_break',
+        'skill1',
+        'skill2',
+        'skill3',
         // batter
         'average',
         'trajectory',
