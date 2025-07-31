@@ -10,8 +10,6 @@ class Tournament extends Model
         'name',
         'slug',
         'type',
-        'start_date',
-        'end_date',
         'win',
         'lose',
     ];
