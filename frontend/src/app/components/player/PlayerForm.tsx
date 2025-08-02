@@ -65,18 +65,16 @@ export default function PlayerForm() {
 		spirit: number;
 		limit_break: number;
 		type: 'batter' | 'pitcher' | null;
-		average: number | null;
-		trajectory: string;
+		trajectory: string; // 弾道（野手のみ）
 		meet: number;
 		power: number;
 		speed: number;
-		era: number | null;
 		velocity: number;
 		control: number;
 		stamina: number;
-		skill1: string | null;
-		skill2: string | null;
-		skill3: string | null;
+		skill1: number | null;
+		skill2: number | null;
+		skill3: number | null;
 	};
 
 	const initialForm: PlayerFormType = {
@@ -86,12 +84,10 @@ export default function PlayerForm() {
 		spirit: 4000,
 		limit_break: 0,
 		type: null,
-		average: null,
 		trajectory: '',
 		meet: 50,
 		power: 50,
 		speed: 50,
-		era: null,
 		velocity: 50,
 		control: 50,
 		stamina: 50,
@@ -144,9 +140,13 @@ export default function PlayerForm() {
 		if (name === 'type') {
 			resetFormByType(value as 'batter' | 'pitcher');
 		} else {
+			// スキルフィールドの場合、空文字列をnullに変換
+			const convertedValue =
+				name.startsWith('skill') && value === '' ? null : value;
+
 			setForm((prev) => ({
 				...prev,
-				[name]: value,
+				[name]: convertedValue,
 			}));
 		}
 	};
@@ -164,6 +164,9 @@ export default function PlayerForm() {
 			velocity: 50, // 球威をリセット
 			control: 50, // 制球をリセット
 			stamina: 50, // スタミナをリセット
+			skill1: null, // スキルをリセット
+			skill2: null, // スキルをリセット
+			skill3: null, // スキルをリセット
 		}));
 	};
 
@@ -340,7 +343,7 @@ export default function PlayerForm() {
 							<FormLabel>超特能</FormLabel>
 							<Select
 								name='skill1'
-								value={form.skill1}
+								value={form.skill1 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
@@ -356,7 +359,7 @@ export default function PlayerForm() {
 							<FormLabel>特能1</FormLabel>
 							<Select
 								name='skill2'
-								value={form.skill2}
+								value={form.skill2 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
@@ -369,10 +372,10 @@ export default function PlayerForm() {
 						</FormControl>
 						{/* 特能2 */}
 						<FormControl fullWidth>
-							<FormLabel>特能1</FormLabel>
+							<FormLabel>特能2</FormLabel>
 							<Select
 								name='skill3'
-								value={form.skill3}
+								value={form.skill3 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
@@ -435,7 +438,7 @@ export default function PlayerForm() {
 							<FormLabel>超特能</FormLabel>
 							<Select
 								name='skill1'
-								value={form.skill1}
+								value={form.skill1 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
@@ -451,7 +454,7 @@ export default function PlayerForm() {
 							<FormLabel>特能1</FormLabel>
 							<Select
 								name='skill2'
-								value={form.skill2}
+								value={form.skill2 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
@@ -464,10 +467,10 @@ export default function PlayerForm() {
 						</FormControl>
 						{/* 特能2 */}
 						<FormControl fullWidth>
-							<FormLabel>特能1</FormLabel>
+							<FormLabel>特能2</FormLabel>
 							<Select
 								name='skill3'
-								value={form.skill3}
+								value={form.skill3 ?? ''}
 								onChange={handleSelectChange}
 							>
 								<MenuItem value=''>選択してください</MenuItem>
