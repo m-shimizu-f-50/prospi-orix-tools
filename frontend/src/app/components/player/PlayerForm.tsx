@@ -4,9 +4,15 @@ import {
 	BATTER_POSITIONS,
 	PITCHER_POSITIONS,
 	TRAJECTORIES,
+	PITCHER_SUPER_SKILLS,
+	PITCHER_SKILLS,
+	BATTER_SUPER_SKILLS,
+	BATTER_SKILLS,
 } from '@/app/constants/common';
 import { useState } from 'react';
 import { useToast } from '@/app/contexts/ToastContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createPlayer } from '@/app/api/players';
 import {
 	TextField,
 	FormControl,
@@ -25,8 +31,32 @@ import { useRouter } from 'next/navigation';
 
 export default function PlayerForm() {
 	const { showToast } = useToast();
+	const queryClient = useQueryClient();
 	// useRouterを使用してルーティングを行う
 	const router = useRouter();
+
+	// TanStack QueryのuseMutationを使用して選手登録処理を管理
+	const createPlayerMutation = useMutation({
+		mutationFn: createPlayer,
+		onSuccess: () => {
+			// 登録成功時の処理
+			showToast('選手の登録が完了しました！', 'success');
+			setForm(initialForm); // フォームをリセット
+			// 選手一覧のキャッシュを無効化して最新データを取得
+			queryClient.invalidateQueries({ queryKey: ['players'] });
+			// 選手一覧ページに遷移
+			router.push('/players');
+		},
+		onError: (error) => {
+			// 登録失敗時の処理
+			showToast(
+				error instanceof Error
+					? error.message
+					: '登録に失敗しました。もう一度お試しください。',
+				'error'
+			);
+		},
+	});
 
 	type PlayerFormType = {
 		name: string;
@@ -44,6 +74,9 @@ export default function PlayerForm() {
 		velocity: number;
 		control: number;
 		stamina: number;
+		skill1: string | null;
+		skill2: string | null;
+		skill3: string | null;
 	};
 
 	const initialForm: PlayerFormType = {
@@ -62,6 +95,9 @@ export default function PlayerForm() {
 		velocity: 50,
 		control: 50,
 		stamina: 50,
+		skill1: null,
+		skill2: null,
+		skill3: null,
 	};
 
 	// フォームの状態を管理
@@ -80,24 +116,8 @@ export default function PlayerForm() {
 		e.preventDefault();
 		console.log('送信内容:', form);
 
-		try {
-			const response = await fetch('http://localhost:8000/api/player/create', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(form),
-			});
-
-			if (response.ok) {
-				showToast('選手の登録が完了しました！', 'success');
-				setForm(initialForm); // フォームをリセット
-				// 選手一覧ページに遷移
-				router.push('/players');
-			} else {
-				showToast('登録に失敗しました。もう一度お試しください。', 'error');
-			}
-		} catch {
-			showToast('エラーが発生しました。もう一度お試しください。', 'error');
-		}
+		// TanStack QueryのmutationでAPI呼び出し
+		createPlayerMutation.mutate(form);
 	};
 
 	// 入力値の変更を処理するハンドラー（TextField用）
@@ -314,6 +334,55 @@ export default function PlayerForm() {
 								max: 99,
 							}}
 						/>
+
+						{/* 超特能 */}
+						<FormControl fullWidth>
+							<FormLabel>超特能</FormLabel>
+							<Select
+								name='skill1'
+								value={form.skill1}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{BATTER_SUPER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						{/* 特能1 */}
+						<FormControl fullWidth>
+							<FormLabel>特能1</FormLabel>
+							<Select
+								name='skill2'
+								value={form.skill2}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{BATTER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						{/* 特能2 */}
+						<FormControl fullWidth>
+							<FormLabel>特能1</FormLabel>
+							<Select
+								name='skill3'
+								value={form.skill3}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{BATTER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
 					</Stack>
 				)}
 
@@ -361,6 +430,54 @@ export default function PlayerForm() {
 								max: 99,
 							}}
 						/>
+						{/* 超特能 */}
+						<FormControl fullWidth>
+							<FormLabel>超特能</FormLabel>
+							<Select
+								name='skill1'
+								value={form.skill1}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{PITCHER_SUPER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						{/* 特能1 */}
+						<FormControl fullWidth>
+							<FormLabel>特能1</FormLabel>
+							<Select
+								name='skill2'
+								value={form.skill2}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{PITCHER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						{/* 特能2 */}
+						<FormControl fullWidth>
+							<FormLabel>特能1</FormLabel>
+							<Select
+								name='skill3'
+								value={form.skill3}
+								onChange={handleSelectChange}
+							>
+								<MenuItem value=''>選択してください</MenuItem>
+								{PITCHER_SKILLS.map((skill) => (
+									<MenuItem key={skill.value} value={skill.value}>
+										{skill.label}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
 					</Stack>
 				)}
 
@@ -370,8 +487,9 @@ export default function PlayerForm() {
 					color='primary'
 					size='large'
 					sx={{ mt: 2 }}
+					disabled={createPlayerMutation.isPending}
 				>
-					登録する
+					{createPlayerMutation.isPending ? '登録中...' : '登録する'}
 				</Button>
 			</Stack>
 		</Paper>

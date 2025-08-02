@@ -18,5 +18,10 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // ランク戦
+        $this->call([
+            TournamentSeeder::class,
+        ]);
     }
 }
