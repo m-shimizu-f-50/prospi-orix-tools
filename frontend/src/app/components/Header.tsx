@@ -20,6 +20,10 @@ export default function Header() {
 			url: '/players',
 			title: '選手一覧',
 		},
+		{
+			url: '/rank',
+			title: 'ランク戦',
+		},
 	];
 
 	// 現在のパスに基づいてタブの値を設定
