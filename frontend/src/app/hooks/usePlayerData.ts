@@ -48,6 +48,7 @@ export const usePlayerData = () => {
 		average: player.average || 0,
 		homerun: 0, // APIに含まれていない場合は0で初期化（後で修正予定）
 		rbi: 0, // APIに含まれていない場合は0で初期化（後で修正予定）
+		trajectory: player.trajectory, // 弾道
 		skill1: player.skill1,
 		skill2: player.skill2,
 		skill3: player.skill3,

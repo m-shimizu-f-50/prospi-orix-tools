@@ -10,9 +10,10 @@ export interface Batter {
 	average: number;
 	homerun: number;
 	rbi: number;
-	skill1: string;
-	skill2: string;
-	skill3: string;
+	trajectory?: string; // 弾道
+	skill1: number | null;
+	skill2: number | null;
+	skill3: number | null;
 }
 
 /**
@@ -27,9 +28,9 @@ export interface Pitcher {
 	era: number;
 	strikeouts: number;
 	games: number;
-	skill1: string;
-	skill2: string;
-	skill3: string;
+	skill1: number | null;
+	skill2: number | null;
+	skill3: number | null;
 }
 
 /**
@@ -44,12 +45,12 @@ export interface PlayerApiResponse {
 	limit_break: number;
 	type: 'batter' | 'pitcher' | null; // 投手か野手か
 	// 共通フィールド
-	skill1: string;
-	skill2: string;
-	skill3: string;
+	skill1: number | null; // 超特能
+	skill2: number | null; // 特能1
+	skill3: number | null; // 特能2
 	// 野手専用フィールド
 	average?: number;
-	trajectory?: string;
+	trajectory?: string; // 弾道
 	meet?: number;
 	power?: number;
 	speed?: number;
