@@ -49,6 +49,8 @@ export const useTournamentData = (tournamentId: number) => {
 	): TournamentBatter => {
 		const { player, stats } = playerWithStats;
 
+		console.log('OK', player, stats);
+
 		return {
 			id: player.id, // 選手ID
 			name: player.name, // 選手名

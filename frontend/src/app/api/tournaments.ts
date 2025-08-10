@@ -3,11 +3,7 @@ import {
 	PlayerStats,
 	TournamentData,
 } from '@/app/types/tournament';
-
-/**
- * APIのベースURL
- */
-const API_BASE_URL = 'http://localhost:8000/api';
+import apiClient from '@/app/lib/axios';
 
 /**
  * 大会の包括的データを取得するAPI関数
@@ -21,23 +17,18 @@ const API_BASE_URL = 'http://localhost:8000/api';
 export const fetchTournamentData = async (
 	tournamentId: number
 ): Promise<any> => {
-	const response = await fetch(
-		`${API_BASE_URL}/tournaments/${tournamentId}/details`,
-		{
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}
-	);
-
-	if (!response.ok) {
+	try {
+		const response = await apiClient.get(
+			`/tournaments/${tournamentId}/details`
+		);
+		return response.data;
+	} catch (error: any) {
 		throw new Error(
-			`大会データの取得に失敗しました: ${response.status} ${response.statusText}`
+			`大会データの取得に失敗しました: ${error.response?.status || 'Unknown'} ${
+				error.message
+			}`
 		);
 	}
-
-	return response.json();
 };
 
 /**
@@ -51,20 +42,16 @@ export const fetchTournamentData = async (
 export const fetchTournament = async (
 	tournamentId: number
 ): Promise<Tournament> => {
-	const response = await fetch(`${API_BASE_URL}/tournaments/${tournamentId}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-
-	if (!response.ok) {
+	try {
+		const response = await apiClient.get(`/tournaments/${tournamentId}`);
+		return response.data;
+	} catch (error: any) {
 		throw new Error(
-			`大会情報の取得に失敗しました: ${response.status} ${response.statusText}`
+			`大会情報の取得に失敗しました: ${error.response?.status || 'Unknown'} ${
+				error.message
+			}`
 		);
 	}
-
-	return response.json();
 };
 
 /**
@@ -130,97 +117,6 @@ export const fetchPlayerStats = async (
 };
 
 /**
- * 特定選手の成績のみを取得するAPI関数
- *
- * 用途: 個別選手の詳細成績表示
- *
- * @param tournamentId - 大会ID
- * @param playerId - 選手ID
- * @returns {Promise<PlayerStats>} 選手成績
- */
-export const fetchPlayerStat = async (
-	tournamentId: number,
-	playerId: number
-): Promise<PlayerStats> => {
-	const response = await fetch(
-		`${API_BASE_URL}/tournaments/${tournamentId}/players/${playerId}/stats`,
-		{
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error(
-			`選手成績の取得に失敗しました: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
-};
-
-/**
- * 選手成績を更新するAPI関数
- *
- * @param tournamentId - 大会ID
- * @param playerId - 選手ID
- * @param stats - 更新する成績データ
- * @returns {Promise<PlayerStats>} 更新された選手成績
- */
-export const updatePlayerStats = async (
-	tournamentId: number,
-	playerId: number,
-	stats: Partial<PlayerStats>
-): Promise<PlayerStats> => {
-	const response = await fetch(
-		`${API_BASE_URL}/tournaments/${tournamentId}/players/${playerId}/stats`,
-		{
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(stats),
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error(
-			`選手成績の更新に失敗しました: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
-};
-
-/**
- * 新しい大会を作成するAPI関数
- *
- * @param tournament - 作成する大会データ
- * @returns {Promise<Tournament>} 作成された大会情報
- */
-export const createTournament = async (
-	tournament: Omit<Tournament, 'id'>
-): Promise<Tournament> => {
-	const response = await fetch(`${API_BASE_URL}/tournaments`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(tournament),
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`大会の作成に失敗しました: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
-};
-
-/**
  * 選手成績を一括更新するAPI関数
  *
  * @param tournamentId - 大会ID
@@ -251,27 +147,22 @@ export const bulkUpdatePlayerStats = async (
 	}
 ): Promise<{
 	message: string;
-	tournament_id: number;
-	updated_batters: any[];
-	updated_pitchers: any[];
-	updated_at: string;
+	tournamentId: number; // キャメルケースに変換される
+	updatedBatters: any[]; // キャメルケースに変換される
+	updatedPitchers: any[]; // キャメルケースに変換される
+	updatedAt: string; // キャメルケースに変換される
 }> => {
-	const response = await fetch(
-		`${API_BASE_URL}/tournaments/${tournamentId}/player-stats/bulk-update`,
-		{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		}
-	);
-
-	if (!response.ok) {
+	try {
+		const response = await apiClient.post(
+			`/tournaments/${tournamentId}/player-stats/bulk-update`,
+			data
+		);
+		return response.data;
+	} catch (error: any) {
 		throw new Error(
-			`選手成績の一括更新に失敗しました: ${response.status} ${response.statusText}`
+			`選手成績の一括更新に失敗しました: ${
+				error.response?.status || 'Unknown'
+			} ${error.message}`
 		);
 	}
-
-	return response.json();
 };

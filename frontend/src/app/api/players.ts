@@ -1,9 +1,5 @@
 import { PlayerApiResponse } from '@/app/types/player';
-
-/**
- * APIのベースURL
- */
-const API_BASE_URL = 'http://localhost:8000/api';
+import apiClient from '@/app/lib/axios';
 
 /**
  * 選手一覧を取得するAPI関数
@@ -12,21 +8,16 @@ const API_BASE_URL = 'http://localhost:8000/api';
  * @throws {Error} API呼び出しが失敗した場合
  */
 export const fetchPlayers = async (): Promise<PlayerApiResponse[]> => {
-	const response = await fetch(`${API_BASE_URL}/players`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-
-	if (!response.ok) {
+	try {
+		const response = await apiClient.get('/player');
+		return response.data;
+	} catch (error: any) {
 		throw new Error(
-			`選手データの取得に失敗しました: ${response.status} ${response.statusText}`
+			`選手データの取得に失敗しました: ${error.response?.status || 'Unknown'} ${
+				error.message
+			}`
 		);
 	}
-
-	const data = await response.json();
-	return data;
 };
 
 /**
@@ -39,22 +30,16 @@ export const fetchPlayers = async (): Promise<PlayerApiResponse[]> => {
 export const createPlayer = async (
 	playerData: Omit<PlayerApiResponse, 'id'>
 ): Promise<PlayerApiResponse> => {
-	const response = await fetch(`${API_BASE_URL}/players/create`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(playerData),
-	});
-
-	if (!response.ok) {
+	try {
+		const response = await apiClient.post('/player/create', playerData);
+		return response.data;
+	} catch (error: any) {
 		throw new Error(
-			`選手の登録に失敗しました: ${response.status} ${response.statusText}`
+			`選手の登録に失敗しました: ${error.response?.status || 'Unknown'} ${
+				error.message
+			}`
 		);
 	}
-
-	const data = await response.json();
-	return data;
 };
 
 /**

@@ -178,15 +178,18 @@ class TournamentController extends Controller
      */
     public function bulkUpdatePlayerStats(Request $request, int $tournamentId): JsonResponse
     {
-        // バリデーション
+        // デバッグ: 受信データを確認
+        \Log::info('Received data:', $request->all());
+        
+        // バリデーション（axios-case-converterによりスネークケースで受信）
         $validatedData = $request->validate([
             'batters' => 'required|array',
             'batters.*.id' => 'required|integer|exists:players,id',
             'batters.*.position' => 'nullable|string|max:10',
             'batters.*.order' => 'nullable|integer|min:1|max:9',
-            'batters.*.atBats' => 'required|integer|min:0',
+            'batters.*.at_bats' => 'required|integer|min:0',
             'batters.*.hits' => 'required|integer|min:0',
-            'batters.*.homeRuns' => 'required|integer|min:0',
+            'batters.*.home_runs' => 'required|integer|min:0',
             'batters.*.doubles' => 'required|integer|min:0',
             'batters.*.triples' => 'required|integer|min:0',
             'batters.*.rbi' => 'required|integer|min:0',
@@ -223,10 +226,10 @@ class TournamentController extends Controller
                         'losses' => 0,
                         'draws' => 0,
                         'win_rate' => 0,
-                        'at_bats' => $batterData['atBats'],
+                        'at_bats' => $batterData['at_bats'],
                         'hits' => $batterData['hits'],
-                        'home_runs' => $batterData['homeRuns'],
-                        'rbis' => $batterData['rbi'],
+                        'home_runs' => $batterData['home_runs'],
+                        'rbi' => $batterData['rbi'],
                         'average' => 0, // 計算値はフロントエンドで処理
                         // 基本統計データのみ保存
                         'doubles' => $batterData['doubles'] ?? 0,
@@ -241,7 +244,7 @@ class TournamentController extends Controller
                 $updatedBatters[] = [
                     'player_id' => $playerId,
                     'stats_id' => $playerStats->id,
-                    'at_bats' => $batterData['atBats'],
+                    'at_bats' => $batterData['at_bats'],
                     'hits' => $batterData['hits'],
                 ];
             }

@@ -65,6 +65,8 @@ export default function Rank() {
 	const { batters, pitchers, tournament, loading, error, refetch } =
 		useTournamentData(RANK_ID);
 
+	console.log(batters, pitchers, tournament);
+
 	// 状態管理
 	const [activeTab, setActiveTab] = useState(0);
 	const [teamRecordEditOpen, setTeamRecordEditOpen] = useState(false);
@@ -232,7 +234,7 @@ export default function Rank() {
 
 			// 成功メッセージを表示
 			alert(
-				`選手成績を一括保存しました！\n野手: ${result.updated_batters.length}名\n投手: ${result.updated_pitchers.length}名`
+				`選手成績を一括保存しました！\n野手: ${result.updatedBatters.length}名\n投手: ${result.updatedPitchers.length}名`
 			);
 			setHasChanges(false);
 
