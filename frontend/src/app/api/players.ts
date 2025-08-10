@@ -39,7 +39,7 @@ export const fetchPlayers = async (): Promise<PlayerApiResponse[]> => {
 export const createPlayer = async (
 	playerData: Omit<PlayerApiResponse, 'id'>
 ): Promise<PlayerApiResponse> => {
-	const response = await fetch(`${API_BASE_URL}/player/create`, {
+	const response = await fetch(`${API_BASE_URL}/players/create`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
