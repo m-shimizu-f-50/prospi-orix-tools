@@ -55,38 +55,6 @@ export const fetchTournament = async (
 };
 
 /**
- * 大会一覧を取得するAPI関数
- *
- * 用途: 大会選択画面、大会一覧表示
- *
- * @param type - 大会タイプでフィルタ（オプション）
- * @returns {Promise<Tournament[]>} 大会一覧
- */
-export const fetchTournaments = async (
-	type?: 'rank_battle' | 'cup' | 'league'
-): Promise<Tournament[]> => {
-	const url = new URL(`${API_BASE_URL}/tournaments`);
-	if (type) {
-		url.searchParams.append('type', type);
-	}
-
-	const response = await fetch(url.toString(), {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`大会一覧の取得に失敗しました: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
-};
-
-/**
  * 特定の大会の選手成績のみを取得するAPI関数
  *
  * 用途: 成績の個別更新、リアルタイム更新
@@ -94,27 +62,27 @@ export const fetchTournaments = async (
  * @param tournamentId - 大会ID
  * @returns {Promise<PlayerStats[]>} 選手成績一覧
  */
-export const fetchPlayerStats = async (
-	tournamentId: number
-): Promise<PlayerStats[]> => {
-	const response = await fetch(
-		`${API_BASE_URL}/tournaments/${tournamentId}/player-stats`,
-		{
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}
-	);
+// export const fetchPlayerStats = async (
+// 	tournamentId: number
+// ): Promise<PlayerStats[]> => {
+// 	const response = await fetch(
+// 		`${API_BASE_URL}/tournaments/${tournamentId}/player-stats`,
+// 		{
+// 			method: 'GET',
+// 			headers: {
+// 				'Content-Type': 'application/json',
+// 			},
+// 		}
+// 	);
 
-	if (!response.ok) {
-		throw new Error(
-			`選手成績の取得に失敗しました: ${response.status} ${response.statusText}`
-		);
-	}
+// 	if (!response.ok) {
+// 		throw new Error(
+// 			`選手成績の取得に失敗しました: ${response.status} ${response.statusText}`
+// 		);
+// 	}
 
-	return response.json();
-};
+// 	return response.json();
+// };
 
 /**
  * 選手成績を一括更新するAPI関数

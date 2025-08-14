@@ -9,7 +9,7 @@ import apiClient from '@/app/lib/axios';
  */
 export const fetchPlayers = async (): Promise<PlayerApiResponse[]> => {
 	try {
-		const response = await apiClient.get('/player');
+		const response = await apiClient.get('/players');
 		return response.data;
 	} catch (error: any) {
 		throw new Error(
@@ -31,7 +31,7 @@ export const createPlayer = async (
 	playerData: Omit<PlayerApiResponse, 'id'>
 ): Promise<PlayerApiResponse> => {
 	try {
-		const response = await apiClient.post('/player/create', playerData);
+		const response = await apiClient.post('/players/create', playerData);
 		return response.data;
 	} catch (error: any) {
 		throw new Error(

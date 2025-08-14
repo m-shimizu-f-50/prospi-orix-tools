@@ -24,7 +24,7 @@ Route::get('/user', function (Request $request) {
 // Players API
 Route::prefix('players')->group(function () {
     Route::get('/', [PlayerController::class, 'index']); // 選手一覧取得
-    Route::post('/create', [PlayerController::class, 'store']); // 選手作成
+    Route::post('/create', [PlayerController::class, 'create']); // 選手作成
     Route::get('/{id}', [PlayerController::class, 'show']); // 選手詳細取得
     Route::put('/{id}', [PlayerController::class, 'update']); // 選手更新
     Route::delete('/{id}', [PlayerController::class, 'destroy']); // 選手削除

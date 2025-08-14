@@ -55,7 +55,8 @@ export interface TournamentBatter {
 export interface TournamentPitcher {
 	id: number;
 	name: string;
-	order?: number | null; // 打順（投手も打席に立つ場合）
+	order?: number | null;
+	position: string;
 	// 成績データ
 	wins: number;
 	losses: number;

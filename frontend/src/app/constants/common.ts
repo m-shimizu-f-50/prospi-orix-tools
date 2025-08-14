@@ -111,7 +111,7 @@ export const BATTER_SUPER_SKILLS = [
 	{ value: 14, label: '超ラインドライブ' },
 	{ value: 15, label: '超流し打ち' },
 	{ value: 16, label: '超盗塁' },
-	{ value: 17, label: '超奥行き' },
+	{ value: 17, label: '超捕手' },
 ];
 
 // 特能定義（野手）
@@ -132,5 +132,12 @@ export const BATTER_SKILLS = [
 	{ value: 14, label: 'ラインドライブ' },
 	{ value: 15, label: '流し打ち' },
 	{ value: 16, label: '盗塁' },
-	{ value: 17, label: '奥行き' },
+	{ value: 17, label: 'エリア51' },
+	{ value: 18, label: 'イチロー' },
+	{ value: 19, label: '守備職人' },
+	{ value: 20, label: '粘り打ち' },
+	{ value: 21, label: '内野安打' },
+	{ value: 22, label: '初球' },
+	{ value: 23, label: 'フルスイング' },
+	{ value: 24, label: '熱気' },
 ];
