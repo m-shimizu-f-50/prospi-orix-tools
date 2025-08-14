@@ -49,6 +49,8 @@ export const useTournamentData = (tournamentId: number) => {
 	): TournamentBatter => {
 		const { player, stats } = playerWithStats;
 
+		console.log('OK', player, stats);
+
 		return {
 			id: player.id, // 選手ID
 			name: player.name, // 選手名
@@ -74,6 +76,7 @@ export const useTournamentData = (tournamentId: number) => {
 			id: player.id,
 			name: player.name,
 			order: stats.order,
+			position: player.position,
 			wins: stats.wins || 0,
 			losses: stats.losses || 0,
 			saves: stats.saves || 0,
@@ -147,14 +150,14 @@ export const useTournament = (tournamentId: number) => {
  * @param tournamentId - 大会ID
  * @returns 選手成績一覧とローディング状態
  */
-export const usePlayerStats = (tournamentId: number) => {
-	return useQuery({
-		queryKey: ['playerStats', tournamentId],
-		queryFn: () => fetchPlayerStats(tournamentId),
-		staleTime: 1 * 60 * 1000, // 1分間キャッシュ（成績は頻繁に更新）
-		enabled: !!tournamentId,
-	});
-};
+// export const usePlayerStats = (tournamentId: number) => {
+// 	return useQuery({
+// 		queryKey: ['playerStats', tournamentId],
+// 		queryFn: () => fetchPlayerStats(tournamentId),
+// 		staleTime: 1 * 60 * 1000, // 1分間キャッシュ（成績は頻繁に更新）
+// 		enabled: !!tournamentId,
+// 	});
+// };
 
 /**
  * 選手成績更新用のmutationフック

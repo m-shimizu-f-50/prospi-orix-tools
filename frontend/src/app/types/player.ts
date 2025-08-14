@@ -1,12 +1,12 @@
 /**
- * 野手データの型定義
+ * 野手データの型定義（UI用）
  */
 export interface Batter {
 	id: number;
 	name: string;
 	position: string;
 	spirit: number;
-	limit_break: number;
+	limitBreak: number; // キャメルケース
 	average: number;
 	homerun: number;
 	rbi: number;
@@ -17,14 +17,14 @@ export interface Batter {
 }
 
 /**
- * 投手データの型定義
+ * 投手データの型定義（UI用）
  */
 export interface Pitcher {
 	id: number;
 	name: string;
 	type: string;
 	spirit: number;
-	limit_break: number;
+	limitBreak: number; // キャメルケース
 	era: number;
 	strikeouts: number;
 	games: number;
@@ -35,6 +35,7 @@ export interface Pitcher {
 
 /**
  * API取得用の選手データ型（バックエンドのレスポンス形式）
+ * axios-case-converterによりスネークケース → キャメルケースに自動変換される
  */
 export interface PlayerApiResponse {
 	id: number;
@@ -42,7 +43,7 @@ export interface PlayerApiResponse {
 	position: string;
 	series: string;
 	spirit: number;
-	limit_break: number;
+	limitBreak: number; // limit_break → limitBreak
 	type: 'batter' | 'pitcher' | null; // 投手か野手か
 	// 共通フィールド
 	skill1: number | null; // 超特能

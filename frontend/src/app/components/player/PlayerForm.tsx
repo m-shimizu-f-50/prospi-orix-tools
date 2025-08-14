@@ -81,16 +81,16 @@ export default function PlayerForm() {
 		name: '',
 		position: '',
 		series: '',
-		spirit: 4000,
-		limit_break: 0,
+		spirit: 4500,
+		limit_break: 5,
 		type: null,
 		trajectory: '',
-		meet: 50,
-		power: 50,
-		speed: 50,
-		velocity: 50,
-		control: 50,
-		stamina: 50,
+		meet: 70,
+		power: 70,
+		speed: 70,
+		velocity: 70,
+		control: 70,
+		stamina: 70,
 		skill1: null,
 		skill2: null,
 		skill3: null,
@@ -158,12 +158,12 @@ export default function PlayerForm() {
 			type: type,
 			position: '', // ポジションをリセット
 			trajectory: '', // 弾道をリセット
-			meet: 50, // ミートをリセット
-			power: 50, // パワーをリセット
-			speed: 50, // 走力をリセット
-			velocity: 50, // 球威をリセット
-			control: 50, // 制球をリセット
-			stamina: 50, // スタミナをリセット
+			meet: 70, // ミートをリセット
+			power: 70, // パワーをリセット
+			speed: 70, // 走力をリセット
+			velocity: 70, // 球威をリセット
+			control: 70, // 制球をリセット
+			stamina: 70, // スタミナをリセット
 			skill1: null, // スキルをリセット
 			skill2: null, // スキルをリセット
 			skill3: null, // スキルをリセット

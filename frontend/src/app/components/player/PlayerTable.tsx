@@ -80,7 +80,7 @@ export default function PlayerTable({
 						</td>
 						<td className='p-2'>{player.spirit}</td>
 						<td className='p-2'>
-							{player.limit_break === 5 ? '極' : `${player.limit_break} / 5`}
+							{player.limitBreak === 5 ? '極' : `${player.limitBreak} / 5`}
 						</td>
 						<td className='p-2'>
 							{BATTER_SUPER_SKILLS.find((s) => s.value === player.skill1)
@@ -130,7 +130,7 @@ export default function PlayerTable({
 						</td>
 						<td className='p-2'>{player.spirit}</td>
 						<td className='p-2'>
-							{player.limit_break === 5 ? '極' : `${player.limit_break} / 5`}
+							{player.limitBreak === 5 ? '極' : `${player.limitBreak} / 5`}
 						</td>
 						<td className='p-2'>
 							{PITCHER_SUPER_SKILLS.find((s) => s.value === player.skill1)

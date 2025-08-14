@@ -44,7 +44,7 @@ export const usePlayerData = () => {
 		name: player.name,
 		position: player.position,
 		spirit: player.spirit,
-		limit_break: player.limit_break,
+		limitBreak: player.limitBreak, // 既にキャメルケース
 		average: player.average || 0,
 		homerun: 0, // APIに含まれていない場合は0で初期化（後で修正予定）
 		rbi: 0, // APIに含まれていない場合は0で初期化（後で修正予定）
@@ -62,7 +62,7 @@ export const usePlayerData = () => {
 		name: player.name,
 		type: player.position, // 投手の場合はpositionがタイプを表す
 		spirit: player.spirit,
-		limit_break: player.limit_break,
+		limitBreak: player.limitBreak, // 既にキャメルケース
 		era: player.era || 0,
 		strikeouts: 0, // APIに含まれていない場合は0で初期化（後で修正予定）
 		games: 0, // APIに含まれていない場合は0で初期化（後で修正予定）

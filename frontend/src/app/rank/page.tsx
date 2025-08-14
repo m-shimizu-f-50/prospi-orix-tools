@@ -26,6 +26,7 @@ import {
 import { useTournamentData } from '../hooks/useTournamentData';
 import { TournamentBatter, TournamentPitcher } from '../types/tournament';
 import { bulkUpdatePlayerStats } from '../api/tournaments';
+import { BATTER_POSITIONS, PITCHER_POSITIONS } from '../constants/common';
 
 // Material-UI Icons の代替として文字を使用
 const EditIcon = () => <span>✏️</span>;
@@ -64,6 +65,8 @@ export default function Rank() {
 	// 大会データを取得（大会ID: ランク戦）
 	const { batters, pitchers, tournament, loading, error, refetch } =
 		useTournamentData(RANK_ID);
+
+	console.log(batters, pitchers, tournament);
 
 	// 状態管理
 	const [activeTab, setActiveTab] = useState(0);
@@ -126,32 +129,12 @@ export default function Rank() {
 	const updateBatterStat = (
 		id: number,
 		field: string,
-		value: string | number
+		value: string | number | null
 	) => {
 		setEditableBatters((prev) =>
 			prev.map((player) => {
 				if (player.id === id) {
 					const updatedPlayer = { ...player, [field]: value };
-
-					// 打率とOPSを自動計算
-					if (field === 'hits' || field === 'atBats' || field === 'homeRuns') {
-						const atBats =
-							field === 'atBats' ? Number(value) : updatedPlayer.atBats;
-						const hits = field === 'hits' ? Number(value) : updatedPlayer.hits;
-						const homeRuns =
-							field === 'homeRuns' ? Number(value) : updatedPlayer.homeRuns;
-
-						// // 打率計算
-						// updatedPlayer.average =
-						// 	atBats > 0 ? Number((hits / atBats).toFixed(3)) : 0;
-
-						// // 簡易OPS計算
-						// const slugging = atBats > 0 ? (hits + homeRuns) / atBats : 0;
-						// updatedPlayer.ops = Number(
-						// 	(updatedPlayer.average + slugging).toFixed(3)
-						// );
-					}
-
 					return updatedPlayer;
 				}
 				return player;
@@ -164,31 +147,12 @@ export default function Rank() {
 	const updatePitcherStat = (
 		id: number,
 		field: string,
-		value: string | number
+		value: string | number | null
 	) => {
 		setEditablePitchers((prev) =>
 			prev.map((player) => {
 				if (player.id === id) {
 					const updatedPlayer = { ...player, [field]: value };
-
-					// 防御率とWHIPの自動計算（簡易版）
-					// 実際の計算には自責点、与四球、死球などの詳細データが必要
-					if (field === 'innings') {
-						const innings = Number(value);
-						// 仮の自責点として損失数を使用（実際は別途自責点データが必要）
-						const earnedRuns = updatedPlayer.losses * 2; // 仮の計算
-						updatedPlayer.era =
-							innings > 0 ? Number(((earnedRuns * 9) / innings).toFixed(2)) : 0;
-
-						// 仮のWHIP計算（被安打 + 与四球を投球回で割る）
-						// ここでは奪三振数を使って仮計算
-						const baseOnBalls = Math.floor(updatedPlayer.strikeouts * 0.3); // 仮の与四球
-						const hits = Math.floor(innings * 0.8); // 仮の被安打
-						updatedPlayer.whip =
-							innings > 0
-								? Number(((hits + baseOnBalls) / innings).toFixed(2))
-								: 0;
-					}
 
 					return updatedPlayer;
 				}
@@ -232,7 +196,7 @@ export default function Rank() {
 
 			// 成功メッセージを表示
 			alert(
-				`選手成績を一括保存しました！\n野手: ${result.updated_batters.length}名\n投手: ${result.updated_pitchers.length}名`
+				`選手成績を一括保存しました！\n野手: ${result.updatedBatters.length}名\n投手: ${result.updatedPitchers.length}名`
 			);
 			setHasChanges(false);
 
@@ -416,32 +380,64 @@ export default function Rank() {
 									<Table size='small'>
 										<TableHead>
 											<TableRow>
-												<TableCell sx={{ py: 1 }}></TableCell>
-												<TableCell sx={{ py: 1 }}>選手名</TableCell>
-												<TableCell sx={{ py: 1 }}>オーダー</TableCell>
-												<TableCell sx={{ py: 1 }}>守備位置</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													sx={{ py: 1, textAlign: 'center' }}
+												></TableCell>
+												<TableCell sx={{ py: 1, textAlign: 'center' }}>
+													選手名
+												</TableCell>
+												<TableCell sx={{ py: 1, textAlign: 'center' }}>
+													オーダー
+												</TableCell>
+												<TableCell sx={{ py: 1, textAlign: 'center' }}>
+													守備位置
+												</TableCell>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													打数
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													安打
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													2塁打
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													3塁打
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													本塁打
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													打点
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													打率
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													OPS
 												</TableCell>
 												<TableCell align='center' sx={{ py: 1 }}>
@@ -452,17 +448,17 @@ export default function Rank() {
 										<TableBody>
 											{displayBatters.map((player) => (
 												<TableRow key={player.id} hover>
-													<TableCell sx={{ py: 0.75 }}>
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
 														<IconButton size='small'>
 															<DragIcon />
 														</IconButton>
 													</TableCell>
-													<TableCell sx={{ py: 0.75 }}>
+													<TableCell>
 														<Typography variant='body2' fontWeight='medium'>
 															{player.name}
 														</Typography>
 													</TableCell>
-													<TableCell sx={{ py: 0.75 }}>
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
 														<Typography variant='body2' fontWeight='medium'>
 															{isEditing ? (
 																<TextField
@@ -478,7 +474,7 @@ export default function Rank() {
 																		)
 																	}
 																	size='small'
-																	sx={{ width: 55 }}
+																	sx={{ width: 70 }}
 																	placeholder='打順'
 																/>
 															) : player.order ? (
@@ -488,8 +484,10 @@ export default function Rank() {
 															)}
 														</Typography>
 													</TableCell>
-													<TableCell sx={{ py: 0.75 }}>
-														{player.position}
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
+														{BATTER_POSITIONS.find(
+															(p) => p.value === player.position
+														)?.label || '--'}
 													</TableCell>
 													<TableCell align='right' sx={{ py: 0.75 }}>
 														{isEditing ? (
@@ -504,13 +502,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.atBats
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -523,13 +524,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.hits
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -542,13 +546,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.doubles
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -561,13 +568,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.triples
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -580,13 +590,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.homeRuns
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -599,13 +612,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.rbi
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														<Typography
 															variant='body2'
 															color={
@@ -622,14 +638,20 @@ export default function Rank() {
 															).toFixed(3)}
 														</Typography>
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{calculateOPS(
 															player.atBats,
 															player.hits,
 															player.homeRuns
 														).toFixed(3)}
 													</TableCell>
-													<TableCell align='center' sx={{ py: 0.75 }}>
+													<TableCell
+														align='center'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing && (
 															<Typography variant='caption' color='primary'>
 																編集中
@@ -659,24 +681,52 @@ export default function Rank() {
 									<Table size='small'>
 										<TableHead>
 											<TableRow>
-												<TableCell sx={{ py: 1 }}></TableCell>
-												<TableCell sx={{ py: 1 }}>選手名</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													sx={{ py: 1, textAlign: 'center' }}
+												></TableCell>
+												<TableCell sx={{ py: 1, textAlign: 'center' }}>
+													選手名
+												</TableCell>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													オーダー
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
+													役割
+												</TableCell>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													勝利
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													敗北
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													セーブ
 												</TableCell>
-												<TableCell align='right' sx={{ py: 1 }}>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													勝率
 												</TableCell>
-												<TableCell align='center' sx={{ py: 1 }}>
+												<TableCell
+													align='center'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													操作
 												</TableCell>
 											</TableRow>
@@ -684,17 +734,20 @@ export default function Rank() {
 										<TableBody>
 											{displayPitchers.map((player) => (
 												<TableRow key={player.id} hover>
-													<TableCell sx={{ py: 0.75 }}>
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
 														<IconButton size='small'>
 															<DragIcon />
 														</IconButton>
 													</TableCell>
-													<TableCell sx={{ py: 0.75 }}>
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
 														<Typography variant='body2' fontWeight='medium'>
 															{player.name}
 														</Typography>
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -709,7 +762,7 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 																placeholder='打順'
 															/>
 														) : player.order ? (
@@ -718,7 +771,17 @@ export default function Rank() {
 															'ベンチ'
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
+														<Typography variant='body2' fontWeight='medium'>
+															{PITCHER_POSITIONS.find(
+																(p) => p.value === player.position
+															)?.label || '--'}
+														</Typography>
+													</TableCell>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -731,13 +794,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.wins
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -750,13 +816,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.losses
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing ? (
 															<TextField
 																type='number'
@@ -769,13 +838,16 @@ export default function Rank() {
 																	)
 																}
 																size='small'
-																sx={{ width: 55 }}
+																sx={{ width: 70 }}
 															/>
 														) : (
 															player.saves
 														)}
 													</TableCell>
-													<TableCell align='right' sx={{ py: 0.75 }}>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														<Typography
 															variant='body2'
 															color={
@@ -792,7 +864,10 @@ export default function Rank() {
 															).toFixed(3)}
 														</Typography>
 													</TableCell>
-													<TableCell align='center' sx={{ py: 0.75 }}>
+													<TableCell
+														align='center'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
 														{isEditing && (
 															<Typography variant='caption' color='primary'>
 																編集中
