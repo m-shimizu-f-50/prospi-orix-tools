@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import {
 	fetchTournamentData,
-	fetchPlayerStats,
 	updatePlayerStats,
 	fetchTournament,
 } from '@/app/api/tournaments';
@@ -100,6 +99,13 @@ export const useTournamentData = (tournamentId: number) => {
 		// レスポンスデータを野手と投手に分類
 		const batterData = tournamentData.playersWithStats
 			.filter((playerWithStats) => playerWithStats.player.type === 'batter')
+			.sort((a, b) => {
+				// null を末尾に回す
+				if (a.stats.order === null) return 1;
+				if (b.stats.order === null) return -1;
+				// 数値昇順
+				return a.stats.order - b.stats.order;
+			})
 			.map(convertToTournamentBatter);
 
 		const pitcherData = tournamentData.playersWithStats
