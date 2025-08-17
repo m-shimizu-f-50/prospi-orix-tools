@@ -35,22 +35,40 @@ const TrendingUpIcon = () => <span style={{ color: 'green' }}>📈</span>;
 const TrendingDownIcon = () => <span style={{ color: 'red' }}>📉</span>;
 const SaveIcon = () => <span>💾</span>;
 
-// 計算関数
-const calculateAverage = (atBats: number, hits: number): number => {
-	return atBats > 0 ? hits / atBats : 0;
+type SimpleStats = {
+	atBats: number; // 打数
+	hits: number; // 単打
+	doubles: number; // 二塁打
+	triples: number; // 三塁打
+	homeRuns: number; // 本塁打
 };
 
-const calculateOPS = (
-	atBats: number,
-	hits: number,
-	homeRuns: number
-): number => {
-	if (atBats === 0) return 0;
-	const average = hits / atBats;
-	const slugging = (hits + homeRuns) / atBats; // 簡易OPS計算
-	return average + slugging;
+// 打数計算関数
+const calculateAverage = (stats: SimpleStats): number => {
+	const totalHits = stats.hits + stats.doubles + stats.triples + stats.homeRuns;
+	return stats.atBats > 0 ? totalHits / stats.atBats : 0;
 };
 
+// 長打率（Slugging Percentage）
+const calculateSLG = (stats: SimpleStats): number => {
+	const totalBases =
+		stats.hits + stats.doubles * 2 + stats.triples * 3 + stats.homeRuns * 4;
+
+	return stats.atBats > 0 ? totalBases / stats.atBats : 0;
+};
+
+// OPS（簡易版：OBP = 安打数 ÷ 打数）
+// TODO: 実際のOBP計算は四球や死球などもあるとより正確に計算できる（四球（BB）、死球（HBP）、犠牲フライ（SF））
+const calculateOPS = (stats: SimpleStats): number => {
+	const totalHits = stats.hits + stats.doubles + stats.triples + stats.homeRuns;
+
+	const obp = stats.atBats > 0 ? totalHits / stats.atBats : 0;
+	const slg = calculateSLG(stats);
+
+	return obp + slg;
+};
+
+// 勝率計算関数（投手用）
 const calculateWinRate = (wins: number, losses: number): number => {
 	const totalGames = wins + losses;
 	return totalGames > 0 ? wins / totalGames : 0;
@@ -438,6 +456,12 @@ export default function Rank() {
 													align='right'
 													sx={{ py: 1, textAlign: 'center' }}
 												>
+													長打率
+												</TableCell>
+												<TableCell
+													align='right'
+													sx={{ py: 1, textAlign: 'center' }}
+												>
 													OPS
 												</TableCell>
 												<TableCell align='center' sx={{ py: 1 }}>
@@ -459,30 +483,28 @@ export default function Rank() {
 														</Typography>
 													</TableCell>
 													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
-														<Typography variant='body2' fontWeight='medium'>
-															{isEditing ? (
-																<TextField
-																	type='number'
-																	value={player.order ?? ''}
-																	onChange={(e) =>
-																		updateBatterStat(
-																			player.id,
-																			'order',
-																			e.target.value
-																				? parseInt(e.target.value)
-																				: null
-																		)
-																	}
-																	size='small'
-																	sx={{ width: 70 }}
-																	placeholder='打順'
-																/>
-															) : player.order ? (
-																`${player.order}番`
-															) : (
-																'ベンチ'
-															)}
-														</Typography>
+														{isEditing ? (
+															<TextField
+																type='number'
+																value={player.order ?? ''}
+																onChange={(e) =>
+																	updateBatterStat(
+																		player.id,
+																		'order',
+																		e.target.value
+																			? parseInt(e.target.value)
+																			: null
+																	)
+																}
+																size='small'
+																sx={{ width: 70 }}
+																placeholder='打順'
+															/>
+														) : (
+															<Typography variant='body2' fontWeight='medium'>
+																{player.order ? `${player.order}番` : 'ベンチ'}
+															</Typography>
+														)}
 													</TableCell>
 													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
 														{BATTER_POSITIONS.find(
@@ -625,28 +647,66 @@ export default function Rank() {
 														<Typography
 															variant='body2'
 															color={
-																calculateAverage(player.atBats, player.hits) >=
-																0.3
+																calculateAverage({
+																	atBats: player.atBats,
+																	hits: player.hits,
+																	doubles: player.doubles,
+																	triples: player.triples,
+																	homeRuns: player.homeRuns,
+																}) >= 0.3
 																	? 'success.main'
 																	: 'text.primary'
 															}
 															fontWeight='medium'
 														>
-															{calculateAverage(
-																player.atBats,
-																player.hits
-															).toFixed(3)}
+															{calculateAverage({
+																atBats: player.atBats,
+																hits: player.hits,
+																doubles: player.doubles,
+																triples: player.triples,
+																homeRuns: player.homeRuns,
+															}).toFixed(3)}
 														</Typography>
 													</TableCell>
 													<TableCell
 														align='right'
 														sx={{ py: 0.75, textAlign: 'center' }}
 													>
-														{calculateOPS(
-															player.atBats,
-															player.hits,
-															player.homeRuns
-														).toFixed(3)}
+														<Typography
+															variant='body2'
+															color={
+																calculateSLG({
+																	atBats: player.atBats,
+																	hits: player.hits,
+																	doubles: player.doubles,
+																	triples: player.triples,
+																	homeRuns: player.homeRuns,
+																}) >= 0.3
+																	? 'success.main'
+																	: 'text.primary'
+															}
+															fontWeight='medium'
+														>
+															{calculateSLG({
+																atBats: player.atBats,
+																hits: player.hits,
+																doubles: player.doubles,
+																triples: player.triples,
+																homeRuns: player.homeRuns,
+															}).toFixed(3)}
+														</Typography>
+													</TableCell>
+													<TableCell
+														align='right'
+														sx={{ py: 0.75, textAlign: 'center' }}
+													>
+														{calculateOPS({
+															atBats: player.atBats,
+															hits: player.hits,
+															doubles: player.doubles,
+															triples: player.triples,
+															homeRuns: player.homeRuns,
+														}).toFixed(3)}
 													</TableCell>
 													<TableCell
 														align='center'
@@ -765,10 +825,10 @@ export default function Rank() {
 																sx={{ width: 70 }}
 																placeholder='打順'
 															/>
-														) : player.order ? (
-															`${player.order}`
 														) : (
-															'ベンチ'
+															<Typography variant='body2' fontWeight='medium'>
+																{player.order ? `${player.order}` : 'ベンチ'}
+															</Typography>
 														)}
 													</TableCell>
 													<TableCell sx={{ py: 0.75, textAlign: 'center' }}>
