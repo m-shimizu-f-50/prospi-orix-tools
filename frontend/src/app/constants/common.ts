@@ -140,4 +140,20 @@ export const BATTER_SKILLS = [
 	{ value: 22, label: '初球' },
 	{ value: 23, label: 'フルスイング' },
 	{ value: 24, label: '熱気' },
+	{ value: 25, label: '逆境' },
+];
+
+// 投手ロール定義
+export const PITCHER_ROLES = [
+	{ value: 1, label: '先発1' },
+	{ value: 2, label: '先発2' },
+	{ value: 3, label: '先発3' },
+	{ value: 4, label: '先発4' },
+	{ value: 5, label: '先発5' },
+	{ value: 6, label: '中継ぎ1' },
+	{ value: 7, label: '中継ぎ2' },
+	{ value: 8, label: '中継ぎ3' },
+	{ value: 9, label: '中継ぎ4' },
+	{ value: 10, label: '中継ぎ5' },
+	{ value: 11, label: '抑え' },
 ];

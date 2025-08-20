@@ -48,8 +48,6 @@ export const useTournamentData = (tournamentId: number) => {
 	): TournamentBatter => {
 		const { player, stats } = playerWithStats;
 
-		console.log('OK', player, stats);
-
 		return {
 			id: player.id, // 選手ID
 			name: player.name, // 選手名
@@ -103,14 +101,30 @@ export const useTournamentData = (tournamentId: number) => {
 				// null を末尾に回す
 				if (a.stats.order === null) return 1;
 				if (b.stats.order === null) return -1;
-				// 数値昇順
+				// 数値昇順(打順の順番にソート)
 				return a.stats.order - b.stats.order;
 			})
 			.map(convertToTournamentBatter);
 
 		const pitcherData = tournamentData.playersWithStats
 			.filter((playerWithStats) => playerWithStats.player.type === 'pitcher')
-			.map(convertToTournamentPitcher);
+			.map(convertToTournamentPitcher)
+			.sort((a, b) => {
+				// 並び順を定義
+				// 1-5: 先発1~5
+				// 6-11: 中継ぎ1~6
+				// 12: 抑え
+				// null: ベンチ（999番にする）
+				const orderValue = (order: number | null) => {
+					if (order == null) return 999; // ベンチを一番最後に
+					if (order >= 1 && order <= 5) return order; // 先発1~5
+					if (order >= 6 && order <= 11) return 100 + order; // 中継ぎ → 100番台
+					if (order === 12) return 200; // 抑え
+					return 999; // 不明 or ベンチ
+				};
+
+				return orderValue(a.order) - orderValue(b.order);
+			});
 
 		return {
 			batters: batterData,

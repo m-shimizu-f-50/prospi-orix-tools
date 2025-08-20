@@ -195,7 +195,7 @@ class TournamentController extends Controller
             'batters.*.rbi' => 'required|integer|min:0',
             'pitchers' => 'required|array',
             'pitchers.*.id' => 'required|integer|exists:players,id',
-            'pitchers.*.order' => 'nullable|integer|min:1|max:9',
+            'pitchers.*.order' => 'nullable|integer|min:1|max:11',
             'pitchers.*.wins' => 'required|integer|min:0',
             'pitchers.*.losses' => 'required|integer|min:0',
             'pitchers.*.saves' => 'required|integer|min:0',

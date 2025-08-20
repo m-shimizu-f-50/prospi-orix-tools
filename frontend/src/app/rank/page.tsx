@@ -22,11 +22,18 @@ import {
 	DialogActions,
 	Tabs,
 	Tab,
+	Select,
+	MenuItem,
+	SelectChangeEvent,
 } from '@mui/material';
 import { useTournamentData } from '../hooks/useTournamentData';
 import { TournamentBatter, TournamentPitcher } from '../types/tournament';
 import { bulkUpdatePlayerStats } from '../api/tournaments';
-import { BATTER_POSITIONS, PITCHER_POSITIONS } from '../constants/common';
+import {
+	BATTER_POSITIONS,
+	PITCHER_POSITIONS,
+	PITCHER_ROLES,
+} from '../constants/common';
 
 // Material-UI Icons の代替として文字を使用
 const EditIcon = () => <span>✏️</span>;
@@ -178,6 +185,12 @@ export default function Rank() {
 			})
 		);
 		setHasChanges(true);
+	};
+
+	const getPitcherRoleLabel = (order: number | null | undefined): string => {
+		if (order == null) return 'ベンチ';
+		const hit = PITCHER_ROLES.find((o) => o.value === order);
+		return hit ? hit.label : String(order);
 	};
 
 	// 全データ保存
@@ -809,25 +822,42 @@ export default function Rank() {
 														sx={{ py: 0.75, textAlign: 'center' }}
 													>
 														{isEditing ? (
-															<TextField
-																type='number'
-																value={player.order ?? ''}
-																onChange={(e) =>
-																	updatePitcherStat(
-																		player.id,
-																		'order',
-																		e.target.value
-																			? parseInt(e.target.value)
-																			: null
-																	)
-																}
+															<Select
+																value={
+																	player.order == null
+																		? ''
+																		: String(player.order)
+																} // ← UIはstringで保持
+																onChange={(e: SelectChangeEvent<string>) => {
+																	const v = e.target.value; // string | ''
+																	const next = v === '' ? null : Number(v); // ← API用に number|null に変換
+																	updatePitcherStat(player.id, 'order', next);
+																}}
 																size='small'
-																sx={{ width: 70 }}
-																placeholder='打順'
-															/>
+																displayEmpty
+																sx={{ minWidth: 120 }}
+																renderValue={(selected) => {
+																	// プレースホルダー表示
+																	if (!selected) return 'ベンチ';
+																	const num = Number(selected);
+																	return getPitcherRoleLabel(num);
+																}}
+															>
+																{/* ベンチ（null） */}
+																<MenuItem value=''>
+																	<em>ベンチ</em>
+																</MenuItem>
+
+																{/* 先発/中継ぎ/抑え */}
+																{PITCHER_ROLES.map((opt) => (
+																	<MenuItem key={opt.value} value={opt.value}>
+																		{opt.label}
+																	</MenuItem>
+																))}
+															</Select>
 														) : (
 															<Typography variant='body2' fontWeight='medium'>
-																{player.order ? `${player.order}` : 'ベンチ'}
+																{getPitcherRoleLabel(player.order)}
 															</Typography>
 														)}
 													</TableCell>
