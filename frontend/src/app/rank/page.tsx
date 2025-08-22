@@ -233,6 +233,8 @@ export default function Rank() {
 
 			// データを再取得して最新状態に更新
 			refetch();
+
+			setIsEditing(false); // 編集モード終了
 		} catch (error) {
 			console.error('保存エラー:', error);
 			alert('選手成績の保存に失敗しました。再度お試しください。');
@@ -368,14 +370,6 @@ export default function Rank() {
 							選手成績
 						</Typography>
 						<Box display='flex' gap={1}>
-							<Button
-								variant={isEditing ? 'contained' : 'outlined'}
-								color={isEditing ? 'secondary' : 'primary'}
-								onClick={toggleEditMode}
-								startIcon={<EditIcon />}
-							>
-								{isEditing ? '編集終了' : '編集モード'}
-							</Button>
 							{isEditing && hasChanges && (
 								<Button
 									variant='contained'
@@ -386,6 +380,14 @@ export default function Rank() {
 									一括保存
 								</Button>
 							)}
+							<Button
+								variant={isEditing ? 'contained' : 'outlined'}
+								color={isEditing ? 'secondary' : 'primary'}
+								onClick={toggleEditMode}
+								startIcon={<EditIcon />}
+							>
+								{isEditing ? '編集終了' : '編集モード'}
+							</Button>
 						</Box>
 					</Box>
 
