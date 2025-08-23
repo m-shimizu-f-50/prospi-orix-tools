@@ -34,6 +34,7 @@ import {
 	PITCHER_POSITIONS,
 	PITCHER_ROLES,
 } from '../constants/common';
+import { useToast } from '../contexts/ToastContext';
 
 // Material-UI Icons の代替として文字を使用
 const EditIcon = () => <span>✏️</span>;
@@ -85,6 +86,7 @@ const calculateWinRate = (wins: number, losses: number): number => {
  * ランク戦ページコンポーネント
  */
 export default function Rank() {
+	const { showToast } = useToast();
 	// ランク戦ID
 	const RANK_ID = 1;
 	// 大会データを取得（大会ID: ランク戦）
@@ -226,8 +228,9 @@ export default function Rank() {
 			console.log('保存結果:', result);
 
 			// 成功メッセージを表示
-			alert(
-				`選手成績を一括保存しました！\n野手: ${result.updatedBatters.length}名\n投手: ${result.updatedPitchers.length}名`
+			showToast(
+				`選手成績を一括保存しました！\n野手: ${result.updatedBatters.length}名\n投手: ${result.updatedPitchers.length}名`,
+				'success'
 			);
 			setHasChanges(false);
 
@@ -237,7 +240,12 @@ export default function Rank() {
 			setIsEditing(false); // 編集モード終了
 		} catch (error) {
 			console.error('保存エラー:', error);
-			alert('選手成績の保存に失敗しました。再度お試しください。');
+			showToast(
+				error instanceof Error
+					? error.message
+					: '選手成績の保存に失敗しました。再度お試しください。',
+				'error'
+			);
 		}
 	};
 
