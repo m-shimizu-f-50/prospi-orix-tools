@@ -22,7 +22,11 @@ export default function Header() {
 		},
 		{
 			url: '/rank',
-			title: 'ランク戦',
+			title: 'ランク/ルーム戦',
+		},
+		{
+			url: '/tournaments',
+			title: '大会',
 		},
 	];
 
